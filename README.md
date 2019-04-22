@@ -4,7 +4,7 @@ run urlcrawler_test.go or run urlcrawler_test.go with coverage
 ## Approach to Design 
 
 In the above question, we have only been asked to crawl 2 levels for simplicity & avoid huge amounts of data, however, if we designed a solution that could only crawl 2 levels, our solution would not be able to scale to any number of level/depth_n. 
-Tailoring a solution to only depth_2, we could have taken a basic logic approach(only store and traverse internal urls in origin). Only output external urls in html bodies of (origin + internal urls in origin).
+Tailoring a solution to only depth_2, we could have taken a basic logic approach(only store and traverse internal urls in origin). Only output external urls in response bodies of (origin + internal urls in origin).
 
 Typically, every domain has multiple internal pages and every internal page has sub internal pages. For example-- example.com/abc, example.com/about, example.com/static, example.com/abc/originstatic.
 
@@ -72,5 +72,6 @@ A lot of above optimizations/scaling/deployment-ways can be implemented to make 
 Parsing every href 'a' tag can be also done more robustly since currently we also encounter a lot of javascipts/mail-to/other-non-URL parts in it.
 
 Malformed URLs should directly be handled from http.get requests and checking for HTTP Response header to ensure that the body is well-formatted, else return appropriately. We can extend the MimeTypeSet to include all possible types(list of known mimeTypes- https://www.freeformatter.com/mime-types-list.html). Even After this the response body can be corrupted, so those can be better handled with more logic.
+
 
 
