@@ -10,7 +10,7 @@ Typically, every domain has multiple internal pages and every internal page has 
 
 + **Data structures**
 
-A user may wish to crawl all internal pages of a domain or to any given depth_n. So we'd have to come with an approach that allows to keep track of levels & identify such dependencies in current internal page to previously visited internal pages or unvisited internal page while going each page-- How do we track all internal links/dependencies and store the state of the system? Thinking of this entire system as a graphs elegantly maps the ancestor-descendant dependencies with directed edges. In fact, a graph without any cycles is a tree, so we can think of this as a tree since we should not create any cycles.
+A user may wish to crawl all internal pages of a domain or to any given depth_n. So we'd have to come with an approach that allows to keep track of levels & identify such dependencies in current internal page to previously visited internal pages or unvisited internal page while traversing each page-- How do we track all internal links/dependencies and store the state of the system? Thinking of this entire system as a graphs elegantly maps the ancestor-descendant dependencies with directed edges. In fact, a graph without any cycles is a tree, so we can think of this as a tree since we should not create any cycles.
 
 Let’s think of every url-path as a node and every sub-internal-url-path as a child/successor node. There is a directed edge from parent-internal path to child sub-internal-path. If there are two distinct url-paths that refer to the same HTML content, then we should skip traversing the duplicate to avoid cycles in the graph. 
 
@@ -44,6 +44,12 @@ We would have to make sure our system is failure tolerant, so if a server crashe
 These multiple instances can run in parallel and each instance would have parallelism within in allowing for low latency and faster traversals.
 
 ## Deployment Pipeline
+
+As the system grows larger, we can think of breaking up the components into smaller microservices (for example- GetStatus, GetResult, CrawlDomainURL Monitoring/Logging). Each of these instead of running in VMs or bare-metal can run in docker containers because those are enviornment agnostic, light-weight, faster-deployment. 
+
+Since we could have many instances of the same URLCrawler, we would have lots of docker containers and to manage netowrking/storage/communication-across-components/bootstrapping-the-system/rollbacks/upgrades/loadbalancing-user-traffic we'd rather use container orchestration system for automating application deployment, scaling, and management- so using Kubernetes allow us to manage our docker containers in pods and handle availbility/reliability of the system.
+
+We can run this entire system in first party data centers or in public cloud which takes away the burden of managing our own hardware.
 
 ## Further Optimizations/Performance Evaluation
 
