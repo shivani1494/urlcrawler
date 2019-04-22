@@ -12,7 +12,7 @@ Typically, every domain has multiple internal pages and every internal page has 
 
 A user may wish to crawl all internal pages of a domain or to any given depth_n. So we'd have to come with an approach that allows to keep track of levels & identify such dependencies in current internal page to previously visited internal pages or unvisited internal page while traversing each page-- How do we track all internal links/dependencies and store the state of the system? Thinking of this entire system as a graphs elegantly maps the ancestor-descendant dependencies with directed edges. In fact, a graph without any cycles is a tree, so we can think of this as a tree since we should not create any cycles.
 
-Let’s think of every url-path as a node and every sub-internal-url-path as a child/successor node. There is a directed edge from parent-internal path to child sub-internal-path. If there are two distinct url-paths that refer to the same HTML content, then we should skip traversing the duplicate to avoid cycles in the graph. 
+Let’s think of every url-path as a node and every sub-internal-url-path as a child/successor node. There is a directed edge from parent-internal path to child sub-internal-path. If there are two distinct url-paths that refer to the same ResponseBody content, then we should skip traversing the duplicate to avoid cycles in the graph. 
 
 + **Algorithm** 
 
@@ -22,7 +22,7 @@ We can either do DFS or BFS approach to this - since the order in which we outpu
 
 Although, doing DFS may cause our memory stack to blow up when there are many levels. Also thinking of parallelization, DFS/any-top-down-traversal will cause a lot of idly waiting threads. Let’s say we do divide and conquer, run DFS and spawn new goroutines for nodes at level_i (** Limited by ideal maximum number of goroutines ideal for depth_n and that would not cause the hit on performance) Ancestors nodes depend on their child nodes to return values to proceed, in effect, many goroutines would be idly waiting. Ideally, we would not want goroutines to be idly waiting. 
 
-This means it would be useful to process a node(each HTML body) fully and extract all internal nodes(internal-sub-paths) before we proceed to next thus removing ancestor-descendant dependency(repeating until depth_n). Also, this allows to run parallel computations with proper sync and concurrency on each node without waiting.
+This means it would be useful to process a node(each ResponseBody body) fully and extract all internal nodes(internal-sub-paths) before we proceed to next thus removing ancestor-descendant dependency(repeating until depth_n). Also, this allows to run parallel computations with proper sync and concurrency on each node without waiting.
 
 This hints at level-by-level or BFS traversal, we can push each unvisited node(internal-sub-paths) onto a queue to process it in the order it arrived(FIFO), we keep adding nodes into the queue at every level before de-queueing and processing the next descendant level. 
 
