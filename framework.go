@@ -5,7 +5,7 @@ import (
 )
 
 const (
-	defaultGoroutines = 1
+	defaultGoroutines = 2
 	defaultDepth      = 2
 )
 
