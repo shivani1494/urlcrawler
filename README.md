@@ -39,7 +39,7 @@ This problem limits us to only internal URLs, however, we can easily think of a 
 
 Also, at scale, we would typically run multiple instances of URL Crawler on multiple servers. Instead of keeping a store/amp per instance a global concurrent store/map (with replicas) would make more sense in order to avoid for duplicate crawling. 
 
-We would have to make sure our system is failure tolerant, so if a server crashes we should not lose the state of the system. So, we should keep persistent (key-value) store.
+We would have to make sure our system is failure tolerant, so if a server crashes we should not lose the state of the system. So, we should keep persistent store (distributed key-value store which has high performance)
 
 These multiple instances can run in parallel and each instance would have parallelism within in allowing for low latency and faster traversals.
 
@@ -53,4 +53,24 @@ We can run this entire system in first party data centers or in public cloud whi
 
 ## Further Optimizations/Performance Evaluation
 
+The HTMLBodies of each page can be huge- So we can also parallelize this by dividing/conquering the HTMLBodies into independent parts and extracting internal/external URLs.
+
+Also GetResult can be optimized by using a map instead of an array, and if order does not matter, we can split computations of the result ds, and traverse the ds faster.
+
+For small HTMLBodies and relatively small depths, spawning many goroutines may infact stall performance since goroutine scheduling and management(waits/locking/syncs/pools) is a (computationally+memory)-intesive task.
+
+So we must spawn goroutines based on depth and size of the data to balance the trade off between computational latency and goroutine management latency.
+
 ## Current Limitations and Future Work
+
+Although I caught errors at every point where errors were thrown, and return values as appropriate, however, upon debugging found that HTTP get currently times out due to various reasons and wait endlessly on certain URLs- found some clues online why this may happen- sending invalid authorization credentials, apis returning invalid content type when there is an error, using wrong http method, not handling unexpected error codes properly so this is a area where we can make this system way more robust to be able to work on any given URL and catch for all possible cases that may happen.
+
+Being able to provide visualization of the entire graph with dependencies would be very interesting.
+
+A lot of above optimizations/scaling/deployment-ways can be implemented to make the system reliable, available and consistent.
+
+Parsing every href 'a' tag can be also done more robustly since currently we also encounter a lot of javascipts/mail-to/other-non-URL parts in it.
+
+Malformed URLs should directly be handled from http.get requests and checking for HTTP Response header to ensure that the body is well-formatted, else return appropriately. We can extend the MimeTypeSet to include all possible types(list of known mimeTypes- https://www.freeformatter.com/mime-types-list.html). Even After this the response body can be corrupted, so those can be better handled with more logic.
+
+
