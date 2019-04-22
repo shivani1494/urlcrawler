@@ -1,13 +1,12 @@
 package urlcrawler
 
 import (
-
-	"sync/atomic"
-	"fmt"
-	"net/url"
-	"time"
 	"errors"
+	"fmt"
 	"github.com/golang/glog"
+	"net/url"
+	"sync/atomic"
+	"time"
 )
 
 func (u *URLCrawler) GetStatus() {
@@ -44,7 +43,7 @@ func (u *URLCrawler) GetResult() {
 	}
 
 	for i := range result {
-		fmt.Println(i, "-->" ,result[i])
+		fmt.Println(i, "-->", result[i])
 	}
 }
 
@@ -55,8 +54,7 @@ func (u *URLCrawler) crawlCurrentURL(queueNodes chan *node) {
 		if len(queueNodes) == 0 {
 			break
 		}
-
-		i := <- queueNodes
+		i := <-queueNodes
 		path, fmtURL, ok := isInternalURL(i.url, u.domainParts)
 
 		//if external link
@@ -82,9 +80,7 @@ func (u *URLCrawler) crawlCurrentURL(queueNodes chan *node) {
 		if added {
 
 			links := make([]string, 0)
-
 			links = u.getHTMLBodyAndLinks(fmtURL)
-
 			glog.Info("crawled url - " + fmtURL)
 
 			for j := range links {
@@ -95,7 +91,7 @@ func (u *URLCrawler) crawlCurrentURL(queueNodes chan *node) {
 		}
 
 		var num int32
-		if int32(len(queueNodes)) > 0 || (u.workerThreads - atomic.LoadInt32(&u.liveWorkerCt) > 0) {
+		if int32(len(queueNodes)) > 0 || (u.workerThreads-atomic.LoadInt32(&u.liveWorkerCt) > 0) {
 			for num = 0; num < (u.workerThreads - atomic.LoadInt32(&u.liveWorkerCt)); num++ {
 				atomic.AddInt32(&u.liveWorkerCt, int32(1))
 				go u.crawlCurrentURL(queueNodes)
@@ -113,10 +109,8 @@ func (u *URLCrawler) CrawlDomainURL() error {
 	}
 
 	queueNodes := make(chan *node, 1000) //initial cap?
-	queueNodes <- &node{url:u.domain, level:0}
-
+	queueNodes <- &node{url: u.domain, level: 0}
 	atomic.AddInt32(&u.liveWorkerCt, int32(1))
-
 	go u.crawlCurrentURL(queueNodes)
 	go u.GetStatus()
 

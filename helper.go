@@ -1,17 +1,16 @@
 package urlcrawler
 
 import (
-
+	"bytes"
 	"crypto/tls"
-	"io/ioutil"
 	"github.com/golang/glog"
 	"golang.org/x/net/html"
+	"io/ioutil"
 	"net/http"
 	"net/url"
-	"time"
-	"strings"
-	"bytes"
 	"strconv"
+	"strings"
+	"time"
 )
 
 func (u *URLCrawler) getHTMLBodyAndLinks(uri string) []string {
@@ -23,22 +22,10 @@ func (u *URLCrawler) getHTMLBodyAndLinks(uri string) []string {
 	}
 	client := &http.Client{
 		Transport: tr,
-		Timeout: 10 * time.Second,
-	}
-
-	if strings.Contains(uri, ".pdf"){
-		return []string{}
+		Timeout:   10 * time.Second,
 	}
 
 	resp, err := client.Get(uri)
-
-	if err != nil {
-
-		glog.Error(err.Error())
-		return []string{}
-	}
-
-
 	if err != nil {
 		glog.Error(err.Error())
 		return []string{}
@@ -74,7 +61,6 @@ func (u *URLCrawler) getHTMLBodyAndLinks(uri string) []string {
 	return getAllLinks(respStr)
 }
 
-
 func getAllLinks(respStr string) []string {
 
 	doc, err := html.Parse(strings.NewReader(respStr))
@@ -101,7 +87,6 @@ func getAllLinks(respStr string) []string {
 		}
 	}
 	f(doc)
-
 	return links
 }
 
@@ -113,11 +98,9 @@ func parseDomainURL(domain string) []string {
 	if err != nil {
 		return ret
 	}
-
 	ret = append(ret, u.Scheme)
 	ret = append(ret, u.Host)
 	ret = append(ret, u.Path)
-
 	return ret
 }
 
@@ -135,19 +118,18 @@ func isInternalURL(uri string, domainParts []string) (string, string, bool) {
 	//trim the path to get rid of slashes
 	path := u.Path
 
-	if u.Path == "" || u.Path  == "/" {
+	if u.Path == "" || u.Path == "/" {
 		path = ""
-	} else if u.Path[0] == '/'{
+	} else if u.Path[0] == '/' {
 		path = u.Path[1:]
 	}
 
 	if path != "" && path[len(path)-1] == '/' {
-		path = path[0:len(path)-1]
+		path = path[0 : len(path)-1]
 	}
 
 	//create an absolute path to return for relative parts
-	if u.Host == domainParts[1] || u.Host == ""  && u.Path != "" {
-
+	if u.Host == domainParts[1] || u.Host == "" && u.Path != "" {
 		//skip this one because this is the domain URL
 		//if the 2 same pages are referred to by diff paths you must ensure
 		//to check bytes of the two to verify whether HTML Body is same or not
@@ -155,7 +137,6 @@ func isInternalURL(uri string, domainParts []string) (string, string, bool) {
 			return path, "", false
 		}
 		uri = domainParts[0] + "://" + domainParts[1] + "/" + path
-
 		return path, uri, true
 	}
 	return path, uri, false

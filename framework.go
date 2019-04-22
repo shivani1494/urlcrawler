@@ -6,11 +6,11 @@ import (
 
 const (
 	defaultGoroutines = 1
-	defaultDepth = 2
+	defaultDepth      = 2
 )
 
 type node struct {
-	url string
+	url   string
 	level int
 }
 
@@ -18,12 +18,10 @@ type URLCrawler struct {
 
 	//the number of levels to be crawled
 	depthN int
-
 	//domainName to crawl
 	domain string
-
+	//storing scheme, hostname, path seperately for easier comparision
 	domainParts []string
-
 	//keep track of so-far crawled/crawling internal URLs - can convert this into concurrent set
 	internalURLSet mapset.Set
 	//map[string]bool
@@ -31,9 +29,9 @@ type URLCrawler struct {
 	//keep track all external URLs - is concurrent because is a channel
 	externalURLs chan string
 
-	doneCrawling bool
+	doneCrawling  bool
 	workerThreads int32
-	liveWorkerCt int32
+	liveWorkerCt  int32
 	domainRespStr []byte
 
 	//mux sync.Mutex

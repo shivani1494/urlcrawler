@@ -1,9 +1,9 @@
 package urlcrawler
 
 import (
-	"testing"
 	"fmt"
 	"github.com/stretchr/testify/assert"
+	"testing"
 )
 
 func setupTest(url string) URLCrawler {
@@ -22,7 +22,7 @@ var (
 )
 
 type interalURLTest struct {
-	input string
+	input    string
 	internal string
 }
 
@@ -34,7 +34,7 @@ var isInterURLTests = []interalURLTest{
 	{"http://eepurl.com/cxPQd5", "https://medium.com"},
 }
 
-func Test_CrawlDomainURL(t *testing.T){
+func Test_CrawlDomainURL(t *testing.T) {
 
 	urlC := setupTest(u1)
 
@@ -42,7 +42,7 @@ func Test_CrawlDomainURL(t *testing.T){
 	err := urlC.CrawlDomainURL()
 
 	if err != nil {
-		assert.Error(t, err, "could not crawl the domain- " + u1)
+		assert.Error(t, err, "could not crawl the domain- "+u1)
 	}
 
 	fmt.Println("======= Printing Status for: " + u1 + " =======")
@@ -53,7 +53,7 @@ func Test_CrawlDomainURL(t *testing.T){
 
 }
 
-func Test_getHTMLBodyAndLinks(t *testing.T){
+func Test_getHTMLBodyAndLinks(t *testing.T) {
 
 	urlC := setupTest(u1)
 	links := urlC.getHTMLBodyAndLinks(u1)
