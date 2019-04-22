@@ -63,7 +63,7 @@ So we must spawn goroutines based on depth and size of the data to balance the t
 
 ## Current Limitations and Future Work
 
-Although I caught errors at every point where errors were thrown, and return values as appropriate, however, upon debugging found that HTTP get currently times out due to various reasons and wait endlessly on certain URLs- found some clues online why this may happen- sending invalid authorization credentials, apis returning invalid content type when there is an error, using wrong http method, not handling unexpected error codes properly so this is a area where we can make this system way more robust to be able to work on any given URL and catch for all possible cases that may happen.
+Although I caught errors at every point where errors were thrown, and return values as appropriate, however, upon debugging found that HTTP get on some URLs with complex response bodies times out due to various reasons and wait endlessly on certain URLs- found some clues online why this may happen- sending invalid authorization credentials, apis returning invalid content type when there is an error, using wrong http method, not handling unexpected error codes properly so this is a area where we can make this system way more robust to be able to work on any given URL and catch for all possible cases that may happen.
 
 Being able to provide visualization of the entire graph with dependencies would be very interesting.
 
