@@ -32,6 +32,10 @@ func (u *URLCrawler) getHTMLBodyAndLinks(uri string) []string {
 	}
 	defer resp.Body.Close()
 
+	if  !u.mimeTypesSet.Contains(resp.Header.Get("Content-type")) {
+		return []string{}
+	}
+
 	//fmt.Println("from getDataLinks- " +uri)
 
 	if resp.StatusCode != http.StatusOK {

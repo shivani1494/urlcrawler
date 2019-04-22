@@ -34,6 +34,8 @@ type URLCrawler struct {
 	liveWorkerCt  int32
 	domainRespStr []byte
 
+	mimeTypesSet mapset.Set
+
 	//mux sync.Mutex
 
 }
@@ -52,4 +54,13 @@ func (c *URLCrawler) NewURLCrawler(domain string) {
 
 	c.workerThreads = defaultGoroutines
 	c.depthN = defaultDepth
+
+
+	c.mimeTypesSet = mapset.NewSet()
+	c.mimeTypesSet.Add("application/xhtml+xml")
+	c.mimeTypesSet.Add("application/xml")
+	c.mimeTypesSet.Add( "text/xml")
+	c.mimeTypesSet.Add( "text/html")
+
+
 }
