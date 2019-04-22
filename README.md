@@ -22,7 +22,7 @@ We can either do DFS or BFS approach to this - since the order in which we outpu
 
 Although, doing DFS may cause our memory stack to blow up when there are many levels. Also thinking of parallelization, DFS/any-top-down-traversal will cause a lot of idly waiting threads. Let’s say we do divide and conquer, run DFS and spawn new goroutines for nodes at level_i (** Limited by ideal maximum number of goroutines ideal for depth_n and that would not cause the hit on performance) Ancestors nodes depend on their child nodes to return values to proceed, in effect, many goroutines would be idly waiting. Ideally, we would not want goroutines to be idly waiting. 
 
-This means it would be useful to process node(each HTML body) fully and extract all internal nodes(internal-sub-paths) and then run parallel computations with proper sync and concurrency on each node independently and remove any ancestor-descendant dependency, repeating the same process over until we reach depth_n.
+This means it would be useful to process node(each HTML body) fully and extract all internal nodes(internal-sub-paths) and then run parallel computations with proper sync and concurrency on each node completely before proceed to next thus removing  ancestor-descendant dependency, and repeating the same process over until we reach depth_n.
 
 This hints at level-by-level or BFS traversal where-in we can push each unvisited node(internal-sub-paths) onto a queue to process it in the order it arrived(FIFO), we keep adding every nodes into the queue that we encounter at every level before moving onto de-queueing and processing the next descendant level. 
 
