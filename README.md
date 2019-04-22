@@ -55,9 +55,9 @@ We can run this entire system in first party data centers or in public cloud whi
 
 The ResponseBodies of each page can be huge- So we can also parallelize this by dividing/conquering the ResponseBodies into independent parts and extracting internal/external URLs.
 
-Also GetResult can be optimized by using a map instead of an array, and if order does not matter, we can split computations of the result ds, and traverse the ds faster.
+Also GetResult can be optimized by using a map instead of an array, and if order does not matter, we can split computations of the result ds, and traverse the ds faster also with divide/conquer and running parallel computations
 
-For small HTMLBodies and relatively small depths, spawning many goroutines may infact stall performance since goroutine scheduling and management(waits/locking/syncs/pools) is a (computationally+memory)-intesive task.
+For small ResponseBodies and relatively small depths, spawning many goroutines may infact stall performance since goroutine scheduling and management(waits/locking/syncs/pools) is a (computationally+memory)-intesive task.
 
 So we must spawn goroutines based on depth and size of the data to balance the trade off between computational latency and goroutine management latency.
 
