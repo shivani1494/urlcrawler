@@ -12,13 +12,18 @@ func setupTest(url string) URLCrawler {
 	return urlC
 }
 
+//to test out all the other cases just set it equal to u1
 var (
-	u1 = "http://www.chrislengerich.com/"
-	u2 = "http://www.impactsearch.io/"
-	u3 = "http://emerginstars.com/"
-	u4 = "http://www.samvitjain.com/./assets"
-	u5 = "http://...com"
-	u6 = "http://eepurl.com/cxPQd5"
+	u1  = "http://www.chrislengerich.com/"
+	u2  = "http://eepurl.com/cxPQd5"
+	u3  = "http://homestarrunner.com/"
+	u4  = "http://www.wayback.com/"
+	u5  = "https://www.badgerbadgerbadger.com/"
+	u6  = "http://www.taco.com/"
+	u7  = "http://www.impactsearch.io/"
+	u8  = "http://emerginstars.com/"
+	u9  = "http://www.samvitjain.com/./assets"
+	u10 = "http://...com"
 )
 
 type interalURLTest struct {
