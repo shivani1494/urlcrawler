@@ -28,7 +28,7 @@ This hints at level-by-level or BFS traversal, we can push each unvisited node(i
 
 Since the problem doesn't ask for visualization or to output the entire state & dependencies of paths and subpaths we don’t need to maintain an entire graph(adjacency lists), instead we can just do a BFS on it with queues(+ other states)
 
-Note- each of these may have any file extension(html, htm, php, asp) The default homepage/HTMLBody(and for that matter any internal page) can be referred to again with non-unique paths that haven't been seen leading to same HTMLBody, so we would need a way to avoid such cycles.
+Note- each of these may have any file extension(html, htm, php, asp) The default homepage/ResponseBody(and for that matter any internal page) can be referred to again with non-unique paths that haven't been seen leading to same ResponseBody, so we would need a way to avoid such cycles.
 
 
 ## Scalablibility and further thoughts
@@ -53,7 +53,7 @@ We can run this entire system in first party data centers or in public cloud whi
 
 ## Further Optimizations/Performance Evaluation
 
-The HTMLBodies of each page can be huge- So we can also parallelize this by dividing/conquering the HTMLBodies into independent parts and extracting internal/external URLs.
+The ResponseBodies of each page can be huge- So we can also parallelize this by dividing/conquering the ResponseBodies into independent parts and extracting internal/external URLs.
 
 Also GetResult can be optimized by using a map instead of an array, and if order does not matter, we can split computations of the result ds, and traverse the ds faster.
 
