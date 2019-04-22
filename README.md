@@ -1,4 +1,5 @@
-## Run urlcrawler_test.go
+## Run
+run urlcrawler_test.go or run urlcrawler_test.go with coverage
 
 ## Approach to Design 
 
