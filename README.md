@@ -8,13 +8,13 @@ Imagine tailoring a solution to only depth_2, we could have easily taken a basic
 
 Typically, every domain has multiple internal pages and every internal page has sub internal pages. For example-- example.com/abc, example.com/about, example.com/static, example.com/abc/originstatic.
 
-**Data structures**
++ **Data structures**
 
 A user may wish to crawl all internal pages of a domain or to any given depth_n. So we would have to come with an approach that allows us to identify such dependencies in current internal page to previously visited internal pages or unvisited internal page while going each page, so question becomes how do we track all internal links/dependencies and store the state of the system? Thinking of this entire system as a graphs elegantly maps the ancestor-descendant dependencies with directed edges. In fact, a graph without any cycles is a tree, so we can think of this as a tree since we should not create any cycles.
 
 Let’s think of every url-path as a node and every sub-internal-url-path as a child/successor node. There is a directed edge from parent-internal path to child sub-internal-path. If there are two distinct url-paths that refer to the same HTML content, then we should skip traversing the duplicate to avoid cycles in the graph. 
 
-**Algorithm** 
++ **Algorithm** 
 
 How do we discover and add nodes/edges into our graph?
 
