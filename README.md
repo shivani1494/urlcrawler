@@ -4,18 +4,19 @@ run urlcrawler_test.go or run urlcrawler_test.go with coverage
 ## Approach to Design 
 
 In the above question, we have only been asked to crawl 2 levels for simplicity & avoid huge amounts of data, however, if we designed a solution that could only crawl 2 levels, our solution would not be able to scale to any number of level/depth_n. 
-
-Imagining tailoring a solution to only depth_2, we could have easily taken a basic logic approach(only store and traverse internal urls in origin). Only output external urls in html bodies of (origin + internal urls in origin).
+Imagine tailoring a solution to only depth_2, we could have easily taken a basic logic approach(only store and traverse internal urls in origin). Only output external urls in html bodies of (origin + internal urls in origin).
 
 Typically, every domain has multiple internal pages and every internal page has sub internal pages. For example-- example.com/abc, example.com/about, example.com/static, example.com/abc/originstatic.
 
-A user may wish to crawl all internal pages of a domain or to any given depth_n. So we would have to come with an approach that allows us to identify dependencies in current call to internal page to previously visited internal pages or unvisited internal page while going each page, so question becomes how do we track all internal links/dependencies and store the state of the system? Thinking of this entire system as a graphs elegantly maps the ancestor-descendant dependencies and directed edges that graphs offer. In fact, a graph without any cycles is a tree, so we can think of this as a tree since we should not create any cycles.
++ Data structures
+
+A user may wish to crawl all internal pages of a domain or to any given depth_n. So we would have to come with an approach that allows us to identify such dependencies in current internal page to previously visited internal pages or unvisited internal page while going each page, so question becomes how do we track all internal links/dependencies and store the state of the system? Thinking of this entire system as a graphs elegantly maps the ancestor-descendant dependencies with directed edges. In fact, a graph without any cycles is a tree, so we can think of this as a tree since we should not create any cycles.
 
 Let’s think of every url-path as a node and every sub-internal-url-path as a child/successor node. There is a directed edge from parent-internal path to child sub-internal-path. If there are two distinct url-paths that refer to the same HTML content, then we should skip traversing the duplicate to avoid cycles in the graph. 
 
-Next, how do we discover and add each node into our graph, edges and build out our graph?
++ Algorithm or how do we discover and add each node into our graph, edges and build out our graph? 
 
-We can either of DFS or BFS approach to this - since the order in which we output our external URLs does not matter. 
+We can either do DFS or BFS approach to this - since the order in which we output our external URLs does not matter. 
 
 Although, doing DFS may cause our memory stack to blow up when there are many levels. Also thinking of parallelization, DFS/any-top-down-traversal will cause a lot of idly waiting threads. Let’s say we spawn new goroutines for nodes all level_i (*Limited by ideal maximum number of goroutines ideal for depth_n and that would not cause the hit on performance) Ancestors nodes depend on their child nodes to return values to proceed, in effect, many goroutines would be idly waiting. Ideally, we would not want goroutines to be idly waiting. 
 
